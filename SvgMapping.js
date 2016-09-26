@@ -1,5 +1,5 @@
 /**
- * SvgMappingK
+ * SvgMapping
  * 
  * @note
  * Data mapping into SVG format map.
@@ -20,7 +20,7 @@
  */
 
 
-var SvgMappingK = function(){
+var SvgMapping = function(){
 	
 	
 	this.data;
