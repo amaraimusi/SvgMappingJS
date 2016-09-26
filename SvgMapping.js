@@ -37,15 +37,15 @@ var SvgMapping = function(){
 	 * @param array data 
 	 * @throw Error
 	 */
-	this.init = function(xid,svg_src,data,option){
+	this.init = function(xid,svg_file_name,data,option){
 		
 		// To Set value to empty value for option.
-		this.option = setOptionButEmpty(xid,svg_src,option);
+		this.option = setOptionIfEmpty(xid,svg_file_name,option);
 		
 		// Inlining outside svg
-		$('#' + xid).load(svg_src, function(){
+		$('#' + xid).load(svg_file_name, function(){
 			
-			data = setDataButEmpty(data);// To Set value to empty value
+			data = setDataIfEmpty(data);// To Set value to empty value
 			
 			refreshMap(xid,data,0);// svg map refresh 
 			
@@ -65,7 +65,7 @@ var SvgMapping = function(){
 	this.modeSwitching = function(mode){
 
 		refreshMap(this.xid,this.data,mode);// svg map refresh 
-	}
+	};
 	
 	
 	// svg map refresh
@@ -135,17 +135,27 @@ var SvgMapping = function(){
 			
 		}
 		
-	}
+	};
 	
-	// ■■■□□□■■■□□□■■■□□□続き
+	
 	function moveByClick(e){
 		var index = $(e).attr('index');
 		
 		var ent = myself.data[index];
 		
-		console.log(ent);//■■■□□□■■■□□□■■■□□□)
-		//option['move_color']
-	}
+		// Element of the operation board.
+		var opbSlt = '#' + myself.option.ope_board;
+		var opb = $(opbSlt);
+		
+		// To set value on the operation board.
+		opb.find('#opb_id').html(ent.id);
+		opb.find('#opb_name').val(ent.name);
+		opb.find('#opb_color').val(ent.color);
+		opb.find('#opb_url').val(ent.url);
+		opb.find('#opb_x').val(ent.x);
+		opb.find('#opb_y').val(ent.y);
+		
+	};
 
 	
 	// To view the operation board.
@@ -156,13 +166,26 @@ var SvgMapping = function(){
 		
 		if($(obSlt)[0]==undefined){
 			
-			$(slt).after("<div id= '" + myself.option.ope_board + "' >いろは</div>");
+			var opeBoradHtml = 
+				"<div id= '" + myself.option.ope_board + "' >" +
+				"<table id='svg_mapping_opb_tbl'><tbody>" +
+				"	<tr><td>ID:</td><td><span id='opb_id' ></span></td></tr>" +
+				"	<tr><td>Name:</td><td><input type='text' id='opb_name' value='0' /></td></tr>" +
+				"	<tr><td>Color:</td><td><input type='color' id='opb_color' value='0' /></td></tr>" +
+				"	<tr><td>URL:</td><td><input type='url' id='opb_url' value='0' /></td></tr>" +
+				"	<tr><td>X:</td><td><input type='number' id='opb_x' value='0' /></td></tr>" +
+				"	<tr><td>Y:</td><td><input type='number' id='opb_y' value='0' /></td></tr>" +
+				"</tbody></table>" +
+				"</div>";
+			
+			
+			$(slt).after(opeBoradHtml);
 		}
 	};
 	
 	
 	// To Set value to empty value
-	function setDataButEmpty(data){
+	function setDataIfEmpty(data){
 		for(var i=0 in data){
 			var ent = data[i];
 			
@@ -193,11 +216,11 @@ var SvgMapping = function(){
 		}
 		
 		return data;
-	}
+	};
 	
 	
 	// To Set value to empty value for option.
-	function setOptionButEmpty(xid,svg_src,option){
+	function setOptionIfEmpty(xid,svg_file_name,option){
 		if(option == null){
 			option = {};
 		}
@@ -220,7 +243,7 @@ var SvgMapping = function(){
 		return option;
 		
 		
-	}
+	};
 	
 	// Check the value is empty
 	function _isEmpty(v){
